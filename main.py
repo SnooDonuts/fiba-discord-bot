@@ -12,7 +12,7 @@ async def on_ready():
     
     # Automatically load all cogs from the cogs directory
     for filename in os.listdir('./cogs'):
-        if filename.endswith('cog.py'):
+        if filename.endswith('.py'):
             await bot.load_extension(f'cogs.{filename[:-3]}')
             print(f'Loaded {filename}')
     
