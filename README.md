@@ -25,11 +25,7 @@ Tento Discord bot je navržen pro správu uživatelských zůstatků a hazardní
    python -m venv venv
    source venv/bin/activate  # Na Windows použijte: venv\Scripts\activate
    ```
-3. Nainstalujte závislosti:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Spusťte bota:
+3. Spusťte bota:
    ```bash
    python main.py
    ```
