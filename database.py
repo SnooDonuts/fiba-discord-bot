@@ -73,28 +73,53 @@ def resetUser(username):
 
 # Function to add a TODO item for a user
 def addTodo(name, priority, date, username):
-    if userExists(username):
-        cur.execute("INSERT INTO todos (name, priority, date, username) VALUES (?, ?, ?, ?)", (name, priority, date, username))
-        con.commit()
-        print(f"TODO item '{name}' added for user '{username}' with priority {priority}.")
-    else:
-        print(f"User '{username}' does not exist.")
-
-# Function to remove a TODO item by its name for a specific user
-def removeTodo(name, username):
-    cur.execute("DELETE FROM todos WHERE name = ? AND username = ?", (name, username))
+    cur.execute("INSERT INTO todos (name, priority, date, username) VALUES (?, ?, ?, ?)", (name, priority, date, username))
     con.commit()
-    print(f"TODO item '{name}' removed for user '{username}'.")
+    print(f"TODO item '{name}' added for user '{username}' with priority {priority}.")
+
+# Function to remove a TODO item 
+def removeTodo(name):
+    cur.execute("DELETE FROM todos WHERE name = ?", (name,))
+    con.commit()
+    print(f"TODO item '{name}' was removed.")
+
 
 # Function to update a TODO item for a user
-def updateTodo(name, priority, date, username):
+def updateTodo(name, priority = None, date = None, username = None):
     cur.execute("UPDATE todos SET priority = ?, date = ? WHERE name = ? AND username = ?", (priority, date, name, username))
     con.commit()
     print(f"TODO item '{name}' updated for user '{username}'.")
 
-# Function to get all TODO items for a user
-def getTodos(username):
-    cur.execute("SELECT name, priority, date FROM todos WHERE username = ?", (username,))
+# Function to get TODO items by username, date, or priority
+def getTodos(username=None, date=None, priority=None):
+    query = "SELECT name, priority, date, username FROM todos WHERE 1=1"
+    params = []
+
+    if username:
+        query += " AND username = ?"
+        params.append(username)
+    if date:
+        query += " AND date = ?"
+        params.append(date)
+    if priority:
+        query += " AND priority = ?"
+        params.append(priority)
+
+    cur.execute(query, params)
+    todos = cur.fetchall()
+    return todos
+
+# Function to get a TODO item by its name
+def getTodoByName(name):
+    cur.execute("SELECT name, priority, date, username FROM todos WHERE name = ?", (name,))
+    todo = cur.fetchone()
+    if todo:
+        return {'name': todo[0], 'priority': todo[1], 'date': todo[2], 'username': todo[3]}
+    return None
+
+# Function to get all TODO items for all users
+def getAllTodos():
+    cur.execute("SELECT username, name, priority, date FROM todos")
     todos = cur.fetchall()
     return todos
 
